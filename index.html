@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080c14">
+  <meta name="description" content="Sổ tay ghi chú lỗi phần mềm - Cườngnèhihii">
+  <title>Cườngnèhihii · Sổ tay ghi chú</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
+        <div class="brand-text">
+          <h1>Cườngnèhihii</h1>
+          <p>SỔ TAY GHI CHÚ LỖI</p>
+        </div>
+        <button class="icon-btn sidebar-close" id="sidebarClose" aria-label="Đóng menu">×</button>
+      </div>
+
+      <button class="btn btn-primary btn-new" id="newNoteBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Ghi chú mới</span>
+      </button>
+
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="searchInput" type="search" placeholder="Tìm kiếm ghi chú..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Xóa tìm kiếm" hidden>×</button>
+      </div>
+
+      <div class="side-section">
+        <div class="side-section-head">
+          <span>DỰ ÁN</span>
+          <button class="link-btn" id="addProjectBtn">+ Thêm</button>
+        </div>
+        <div class="project-input-wrap" id="projectInputWrap" hidden>
+          <input id="projectInput" maxlength="60" placeholder="Tên dự án...">
+        </div>
+        <nav class="project-list" id="projectList" aria-label="Danh sách dự án"></nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="footer-actions">
+          <button class="ghost-btn" id="exportBtn">Xuất dữ liệu</button>
+          <button class="ghost-btn" id="importBtn">Nhập</button>
+        </div>
+        <p class="storage-hint">Dữ liệu lưu trên trình duyệt này</p>
+      </div>
+    </aside>
+
+    <div class="sidebar-scrim" id="sidebarScrim" hidden></div>
+
+    <main class="workspace" id="workspace">
+      <section class="list-pane">
+        <header class="pane-header">
+          <div>
+            <span class="eyebrow">DANH SÁCH</span>
+            <h2 id="listTitle">Tất cả ghi chú</h2>
+          </div>
+          <span class="count-badge" id="countBadge">0</span>
+        </header>
+        <div class="note-list" id="noteList"></div>
+      </section>
+
+      <section class="detail-pane" id="detailPane" aria-live="polite"></section>
+
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Mở menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </main>
+  </div>
+
+  <div class="overlay" id="editorOverlay" hidden>
+    <div class="modal editor-modal" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+      <header class="modal-head">
+        <div>
+          <span class="eyebrow" id="editorKicker">GHI CHÚ LỖI</span>
+          <h2 id="editorTitle">Ghi chú mới</h2>
+        </div>
+        <button class="icon-btn" id="editorClose" aria-label="Đóng">×</button>
+      </header>
+      <form id="noteForm" class="modal-body">
+        <label class="field">
+          <span>Tiêu đề <b>*</b></span>
+          <input id="fieldTitle" required maxlength="200" placeholder="Ví dụ: Lỗi không kết nối CSDL...">
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Dự án</span>
+            <select id="fieldProject"></select>
+          </label>
+          <label class="field">
+            <span>Từ khóa</span>
+            <input id="fieldTags" placeholder="sql, database, ...">
+          </label>
+        </div>
+        <label class="field">
+          <span>Mô tả quá trình xử lý <b>*</b></span>
+          <textarea id="fieldContent" required rows="7" placeholder="Ghi lại các bước khắc phục lỗi..."></textarea>
+        </label>
+        <div class="field">
+          <span>Ảnh đính kèm</span>
+          <div class="image-upload" id="imageDrop">
+            <input type="file" id="imageInput" accept="image/*" multiple hidden>
+            <button type="button" class="upload-btn" id="imagePickBtn">+ Chọn ảnh</button>
+            <span class="upload-hint">hoặc kéo thả ảnh vào đây</span>
+          </div>
+          <div class="image-preview" id="imagePreview"></div>
+        </div>
+      </form>
+      <footer class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="editorCancel">Hủy</button>
+        <button type="submit" form="noteForm" class="btn btn-primary">Lưu ghi chú</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="overlay" id="confirmOverlay" hidden>
+    <div class="modal confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="confirm-icon">!</div>
+      <h2 id="confirmTitle">Xóa ghi chú?</h2>
+      <p id="confirmText">Hành động này không thể hoàn tác.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" id="confirmCancel">Hủy</button>
+        <button class="btn btn-danger" id="confirmOk">Xóa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lightbox-close" id="lightboxClose" aria-label="Đóng ảnh">×</button>
+    <img id="lightboxImg" alt="Ảnh đính kèm phóng to">
+  </div>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+  <input type="file" id="importFile" accept="application/json" hidden>
+
+  <script src="seed.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
