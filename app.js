@@ -190,7 +190,7 @@
       <div class="image-grid">${images.map((image) => {
         const src = imageSrc(image);
         return `<button class="image-tile" data-src="${esc(src)}" aria-label="Phóng to ảnh">
-          <img src="${esc(src)}" alt="${esc(image.filename || 'Ảnh đính kèm')}" loading="lazy">
+          <img src="${esc(src)}" alt="${esc(image.filename || 'Ảnh đính kèm')}">
         </button>`;
       }).join('')}</div>
     </div>` : '';
